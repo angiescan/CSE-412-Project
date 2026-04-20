@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html"></a>
+  <div class="nav-links">
+    <a href="index.html">Menu</a>
+    <a href="orders.html" class="active">Orders</a>
+  </div>
+</nav>
+
+<main>
+  <h1>Orders</h1>
+
+  <div class="orders-controls filter-tabs" id="filterTabs">
+    <button class="active" data-status="all">All</button>
+    <button data-status="ordered">Ordered</button>
+    <button data-status="being_prepared">Preparing</button>
+    <button data-status="ready">Ready</button>
+    <button data-status="completed">Completed</button>
+  </div>
+
+  <table class="orders-table" id="ordersTable">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Type</th>
+        <th>Time</th>
+        <th>Total</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody"></tbody>
+  </table>
+
+  <div class="order-detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <h3 id="detailTitle">Order Details</h3>
+      <button class="btn-close-detail" onclick="closeDetail()">✕ Close</button>
+    </div>
+    <div class="meta-grid" id="detailMeta"></div>
+    <div class="detail-items" id="detailItems"></div>
+    <div class="detail-total" id="detailTotal"></div>
+  </div>
+</main>
+
+<script src="orders.js"></script>
+</body>
+</html>

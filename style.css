@@ -1,0 +1,230 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f7f4f0;
+  color: #222;
+}
+
+/* NAV */
+nav {
+  background: #222;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+nav .brand {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+nav .nav-links a {
+  color: #ccc;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-size: 0.9rem;
+}
+
+nav .nav-links a:hover,
+nav .nav-links a.active {
+  color: #fff;
+}
+
+/* MAIN */
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+}
+
+/* FILTER TABS */
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-tabs button {
+  padding: 0.35rem 1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  color: #444;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.filter-tabs button.active,
+.filter-tabs button:hover {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+/* MENU GRID */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.menu-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.menu-card .item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.menu-card .item-price {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ORDERS TABLE */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.orders-table th {
+  background: #222;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.orders-table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid #eee;
+}
+
+.orders-table tr:last-child td {
+  border-bottom: none;
+}
+
+.orders-table tr:hover td {
+  background: #fafafa;
+  cursor: pointer;
+}
+
+/* STATUS BADGES */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-ordered        { background: #ddeeff; color: #1a5aaa; }
+.status-being_prepared { background: #fff3cc; color: #996600; }
+.status-ready          { background: #ddffee; color: #1a7a40; }
+.status-completed      { background: #eee;    color: #555; }
+
+/* ORDER DETAIL */
+.order-detail-panel {
+  display: none;
+  margin-top: 1.5rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.order-detail-panel.open {
+  display: block;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.detail-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.detail-header .btn-close-detail {
+  background: transparent;
+  border: 1px solid #bbb;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #444;
+}
+
+.meta-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.meta-grid .meta-item {
+  font-size: 0.82rem;
+  color: #666;
+}
+
+.meta-grid .meta-item strong {
+  display: block;
+  color: #222;
+  font-size: 0.88rem;
+}
+
+.detail-items {
+  border-top: 1px solid #eee;
+}
+
+.detail-item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.88rem;
+}
+
+.detail-item-row .di-info {
+  font-size: 0.78rem;
+  color: #888;
+  margin-top: 0.1rem;
+}
+
+.detail-total {
+  font-weight: 700;
+  text-align: right;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
