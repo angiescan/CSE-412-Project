@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-page">
+
+<nav>
+  <a class="brand" href="login.html"></a>
+</nav>
+
+<main>
+  <div class="login-card">
+  <h1>Create Account</h1>
+    <div id="regError" class="login-error" style="display:none;"></div>
+    <div id="regSuccess" class="login-success" style="display:none;"></div>
+    <div class="form-group">
+      <label for="empNumber">Employee Number</label>
+      <input type="number" id="empNumber" placeholder="Choose a 4-digit number" maxlength="4" />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Choose a 4-digit password" maxlength="4" />
+    </div>
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" placeholder="Re-enter password" maxlength="4" />
+    </div>
+    <button class="btn-login" onclick="handleRegister()">Create Account</button>
+    <a href="login.html" class="login-link">Already have an account? Log in</a>
+  </div>
+</main>
+
+<script src="auth.js"></script>
+<script>
+  function handleRegister() {
+    const empNumber       = document.getElementById('empNumber').value.trim();
+    const password        = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+    const error           = document.getElementById('regError');
+    const success         = document.getElementById('regSuccess');
+
+    error.style.display   = 'none';
+    success.style.display = 'none';
+
+    if (empNumber.length !== 4 || isNaN(empNumber)) {
+      error.textContent = 'Employee number must be exactly 4 digits.';
+      error.style.display = 'block';
+      return;
+    }
+    if (password.length !== 4 || isNaN(password)) {
+      error.textContent = 'Password must be exactly 4 digits.';
+      error.style.display = 'block';
+      return;
+    }
+    if (password !== confirmPassword) {
+      error.textContent = 'Passwords do not match.';
+      error.style.display = 'block';
+      return;
+    }
+
+    const employees = getEmployees();
+    if (employees.find(e => e.empNumber === empNumber)) {
+      error.textContent = 'An account with that employee number already exists.';
+      error.style.display = 'block';
+      return;
+    }
+
+    employees.push({ empNumber, password });
+    saveEmployees(employees);
+
+    success.textContent = 'Account created! Redirecting to login...';
+    success.style.display = 'block';
+    setTimeout(() => window.location.href = 'login.html', 1500);
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); });
+</script>
+
+</body>
+</html>

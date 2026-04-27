@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-page">
+
+<nav>
+  <a class="brand" href="login.html"></a>
+</nav>
+
+<main>
+  <div class="login-card">
+  <h1>Employee Login</h1>
+    <div id="loginError" class="login-error" style="display:none;"></div>
+    <div class="form-group">
+      <label for="empNumber">Employee Number</label>
+      <input type="number" id="empNumber" placeholder="4-digit number" maxlength="4" />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="4-digit password" maxlength="4" />
+    </div>
+    <button class="btn-login" onclick="handleLogin()">Log In</button>
+    <a href="register.html" class="login-link">Don't have an account? Create one</a>
+  </div>
+</main>
+
+<script src="auth.js"></script>
+<script>
+  if (getSession()) window.location.href = 'index.html';
+
+  function handleLogin() {
+    const empNumber = document.getElementById('empNumber').value.trim();
+    const password  = document.getElementById('password').value.trim();
+    const error     = document.getElementById('loginError');
+
+    if (empNumber.length !== 4 || password.length !== 4) {
+      error.textContent = 'Employee number and password must each be 4 digits.';
+      error.style.display = 'block';
+      return;
+    }
+
+    const employees = getEmployees();
+    const match = employees.find(e => e.empNumber === empNumber && e.password === password);
+
+    if (match) {
+      localStorage.setItem('session', empNumber);
+      window.location.href = 'index.html';
+    } else {
+      error.textContent = 'Invalid employee number or password.';
+      error.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+</script>
+
+</body>
+</html>
