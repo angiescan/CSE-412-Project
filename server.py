@@ -1,6 +1,7 @@
 import json
 import mimetypes
 import sqlite3
+import sys
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -18,12 +19,13 @@ def get_db():
 
 
 def init_db():
-    if DB_PATH.exists():
-        return
+    is_new_db = not DB_PATH.exists()
 
     with get_db() as conn:
-        conn.executescript((ROOT / "create_table.sql").read_text())
-        conn.executescript((ROOT / "insert_data.sql").read_text())
+        if is_new_db:
+            conn.executescript((ROOT / "create_table.sql").read_text())
+            conn.executescript((ROOT / "insert_data.sql").read_text())
+
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS employee_accounts (
@@ -33,16 +35,18 @@ def init_db():
             )
             """
         )
-        conn.execute(
-            "INSERT OR IGNORE INTO employee_accounts (employee_id, password) VALUES (?, ?)",
-            (201, "1234"),
-        )
 
 
 def reset_db():
     if DB_PATH.exists():
         DB_PATH.unlink()
     init_db()
+
+
+def reset_employee_accounts():
+    init_db()
+    with get_db() as conn:
+        conn.execute("DELETE FROM employee_accounts")
 
 
 def rows_to_dicts(rows):
@@ -78,6 +82,9 @@ class CoffeeShopHandler(SimpleHTTPRequestHandler):
             return self.send_json(self.register(self.read_json()))
         if parsed.path == "/api/reset":
             reset_db()
+            return self.send_json({"ok": True})
+        if parsed.path == "/api/reset-logins":
+            reset_employee_accounts()
             return self.send_json({"ok": True})
 
         return self.send_error(404, "Not found")
@@ -243,24 +250,35 @@ class CoffeeShopHandler(SimpleHTTPRequestHandler):
         password = data.get("password", "").strip()
 
         if len(employee_id) != 3 or not employee_id.isdigit():
-            return {"ok": False, "error": "Use an existing 3-digit employee ID, such as 202 or 203."}
+            return {"ok": False, "error": "Employee ID must be exactly 3 digits."}
         if len(password) != 4 or not password.isdigit():
             return {"ok": False, "error": "Password must be exactly 4 digits."}
 
         with get_db() as conn:
-            employee = conn.execute(
-                "SELECT employee_id FROM employees WHERE employee_id = ?",
-                (employee_id,),
-            ).fetchone()
-            if employee is None:
-                return {"ok": False, "error": "Employee ID is not in the employee table."}
-
             existing = conn.execute(
                 "SELECT employee_id FROM employee_accounts WHERE employee_id = ?",
                 (employee_id,),
             ).fetchone()
             if existing is not None:
                 return {"ok": False, "error": "An account with that employee number already exists."}
+
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO users (user_id, first_name, last_name, phone, email)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    employee_id,
+                    "Employee",
+                    employee_id,
+                    "000-000-0000",
+                    f"employee{employee_id}@brewbean.local",
+                ),
+            )
+            conn.execute(
+                "INSERT OR IGNORE INTO employees (employee_id) VALUES (?)",
+                (employee_id,),
+            )
 
             conn.execute(
                 "INSERT INTO employee_accounts (employee_id, password) VALUES (?, ?)",
@@ -271,8 +289,13 @@ class CoffeeShopHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    if "--reset-logins" in sys.argv:
+        reset_employee_accounts()
+        print("Employee login accounts reset. Menu, orders, customers, and payments were not changed.")
+        raise SystemExit(0)
+
     init_db()
     server = ThreadingHTTPServer(("localhost", 8000), CoffeeShopHandler)
     print("Coffee shop app running at http://localhost:8000")
-    print("Demo login: employee 201, password 1234")
+    print("Open the login page and create an employee account before signing in.")
     server.serve_forever()

@@ -177,5 +177,4 @@ CREATE TABLE employee_accounts (
                 password TEXT NOT NULL,
                 FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
             );
-INSERT INTO employee_accounts VALUES(201,'1234');
 COMMIT;
