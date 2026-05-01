@@ -18,7 +18,7 @@
     <div id="loginError" class="login-error" style="display:none;"></div>
     <div class="form-group">
       <label for="empNumber">Employee Number</label>
-      <input type="number" id="empNumber" placeholder="4-digit number" maxlength="4" />
+      <input type="number" id="empNumber" placeholder="Example: 201" maxlength="3" />
     </div>
     <div class="form-group">
       <label for="password">Password</label>
@@ -33,25 +33,26 @@
 <script>
   if (getSession()) window.location.href = 'index.html';
 
-  function handleLogin() {
+  async function handleLogin() {
     const empNumber = document.getElementById('empNumber').value.trim();
     const password  = document.getElementById('password').value.trim();
     const error     = document.getElementById('loginError');
 
-    if (empNumber.length !== 4 || password.length !== 4) {
-      error.textContent = 'Employee number and password must each be 4 digits.';
+    if (empNumber.length !== 3 || password.length !== 4) {
+      error.textContent = 'Use a 3-digit employee number and 4-digit password.';
       error.style.display = 'block';
       return;
     }
 
-    const employees = getEmployees();
-    const match = employees.find(e => e.empNumber === empNumber && e.password === password);
-
-    if (match) {
-      localStorage.setItem('session', empNumber);
+    try {
+      const result = await apiRequest('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({ employee_id: empNumber, password }),
+      });
+      setSession(result.employee);
       window.location.href = 'index.html';
-    } else {
-      error.textContent = 'Invalid employee number or password.';
+    } catch (err) {
+      error.textContent = err.message;
       error.style.display = 'block';
     }
   }

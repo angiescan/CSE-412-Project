@@ -229,6 +229,36 @@ h1 {
   font-size: 0.9rem;
 }
 
+.status-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.status-actions button {
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.status-actions button:hover {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+.empty-state {
+  color: #7a5c3e;
+  padding: 1rem;
+  text-align: center;
+}
+
 /* LOGIN */
 .login-page main {
   display: flex;
